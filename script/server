@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+CURRENT_IP=$(echo "require 'socket'; print Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address; \$stdout.flush" | ruby -)
+
+# If we're running in production we need to bundle our CSS
+if [ "$RAILS_ENV" == "production" ]; then
+  RAILS_ENV="production" bundle exec rake assets:precompile
+fi
+
+echo "Booting to http://$CURRENT_IP:3000/ 🚀"
+
+bundle exec rails s -b 0.0.0.0

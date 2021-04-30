@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+brew bundle
+bundle install --path vendor/bundle
+npm install
+bundle exec rake db:setup
